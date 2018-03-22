@@ -1,9 +1,5 @@
 ﻿using Harmony;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 using UnityEngine;
 
 namespace ToggleAppliances.Patches
@@ -16,23 +12,23 @@ namespace ToggleAppliances.Patches
         {
             var go = default(GameObject);
             var dist = 0f;
+
             if (Targeting.GetTarget(Player.main.gameObject, 1f, out go, out dist))
             {
-                if (go.GetComponentInParent<BaseFiltrationMachineGeometry>() != null)
+                if (go.GetComponentInParent<BaseFiltrationMachineGeometry>() != null && go.name != "HandTarget")
                 {
                     var geo = go.GetComponentInParent<BaseFiltrationMachineGeometry>();
-
-                    var getModuleMethod = geo.GetType().GetMethod("GetModule", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-
+                    var getModuleMethod = geo.GetType().GetMethod("GetModule", BindingFlags.Instance | BindingFlags.NonPublic);
                     var machine = (FiltrationMachine)getModuleMethod.Invoke(geo, new object[] { });
-                    var handReticle = HandReticle.main;
 
+                    var handReticle = HandReticle.main;
                     handReticle.SetIcon(HandReticle.IconType.Hand);
                     handReticle.SetInteractText("Toggle Filtration Machine");
 
                     if (GameInput.GetButtonDown(GameInput.Button.LeftHand))
                     {
-                        var working = (bool)machine.GetType().GetField("working", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(machine);
+                        var workingField = machine.GetType().GetField("working", BindingFlags.Instance | BindingFlags.NonPublic);
+                        var working = (bool)workingField.GetValue(machine);
 
                         if(working)
                         {
@@ -40,25 +36,19 @@ namespace ToggleAppliances.Patches
                             machine.workSound.Stop();
                             machine.vfxController.Stop(1);
 
-                            var shownModelVFXScan = machine.GetType().GetField("shownModelVfxScan", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(machine) as VFXScan;
-                            var shownModel = machine.GetType().GetField("shownModel", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(machine) as GameObject;
+                            geo.SetWorking(false, go.transform.position.y);
 
-                            if (shownModel != null && shownModelVFXScan != null)
-                                geo.SetWorking(false, shownModelVFXScan.GetCurrentYPos());
-
-                            machine.GetType().GetField("working", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(machine, false);
+                            workingField.SetValue(machine, false);
                         }
                         else
                         {
                             machine.InvokeRepeating("UpdateFiltering", 1f, 1f);
+                            machine.workSound.Play();
+                            machine.vfxController.Play(1);
 
-                            var shownModelVFXScan = machine.GetType().GetField("shownModelVfxScan", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(machine) as VFXScan;
-                            var shownModel = machine.GetType().GetField("shownModel", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(machine) as GameObject;
+                            geo.SetWorking(true, go.transform.position.y);
 
-                            if (shownModel != null && shownModelVFXScan != null)
-                                geo.SetWorking(true, shownModelVFXScan.GetCurrentYPos());
-
-                            machine.GetType().GetField("working", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(machine, true);
+                            workingField.SetValue(machine, true);
                         }
                     }
                 }
