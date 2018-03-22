@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 using System.Reflection;
 using Harmony;
 
@@ -16,6 +17,11 @@ namespace ToggleAppliances
             harmony.PatchAll(Assembly.GetExecutingAssembly());
 
             Console.WriteLine("[ToggleAppliances] Successfully patched!");
+        }
+
+        public static string GetSavePathDir()
+        {
+            return Path.Combine(@"./SNAppData/SavedGames/", Utils.GetSavegameDir(), "ToggleAppliances");
         }
     }
 }

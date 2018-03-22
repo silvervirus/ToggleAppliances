@@ -6,7 +6,7 @@ namespace ToggleAppliances.Patches
 {
     [HarmonyPatch(typeof(Player))]
     [HarmonyPatch("Update")]
-    public class BaseFiltrationMachineGeometry_OnHover_Patch
+    public class Player_Update_patch
     {
         static void Prefix()
         {
