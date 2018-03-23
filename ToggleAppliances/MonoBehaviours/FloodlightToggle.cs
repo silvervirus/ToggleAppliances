@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
-using System.Reflection;
-using Oculus.Newtonsoft.Json;
+﻿using Oculus.Newtonsoft.Json;
 using System.IO;
+using System.Reflection;
 
 namespace ToggleAppliances.MonoBehaviours
 {
     public class FloodlightToggle : HandTarget, IHandTarget, IProtoEventListener
     {
+        private static readonly MethodInfo SetLightsActiveMethod =
+            typeof(TechLight).GetMethod("SetLightsActive", BindingFlags.Instance | BindingFlags.NonPublic);
+
         public bool isOn;
 
         private TechLight techLight;
@@ -42,7 +40,7 @@ namespace ToggleAppliances.MonoBehaviours
             if(techLight.constructable.constructed)
             {
                 isOn = !isOn;
-                techLight.GetType().GetMethod("SetLightsActive", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(techLight, new object[] { isOn });
+                SetLightsActiveMethod.Invoke(techLight, new object[] { isOn });
             }
         }
 
