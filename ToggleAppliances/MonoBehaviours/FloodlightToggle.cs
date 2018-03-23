@@ -50,12 +50,14 @@ namespace ToggleAppliances.MonoBehaviours
             {
                 var handReticle = HandReticle.main;
                 handReticle.SetIcon(HandReticle.IconType.Hand);
-                handReticle.SetInteractText("Toggle Flood Light");
+                handReticle.SetInteractText("Toggle Floodlight");
             }
         }
 
         public void OnProtoDeserialize(ProtobufSerializer serializer)
         {
+            Logger.Log("Deserialize Called for FloodlightToggle");
+
             var savePathDir = Main.GetSavePathDir();
             var savePath = Path.Combine(savePathDir, id + ".json");
 
@@ -74,6 +76,8 @@ namespace ToggleAppliances.MonoBehaviours
 
         public void OnProtoSerialize(ProtobufSerializer serializer)
         {
+            Logger.Log("Serialize Called for FloodlightToggle");
+
             var savePathDir = Main.GetSavePathDir();
             var savePath = Path.Combine(savePathDir, id + ".json");
 

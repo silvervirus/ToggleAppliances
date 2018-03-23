@@ -2,24 +2,27 @@
 using System.IO;
 using System.Reflection;
 using UnityEngine;
+using System;
 
 namespace ToggleAppliances.MonoBehaviours
 {
-    public class FiltrationMachineToggle : MonoBehaviour, IProtoEventListener
+    public class FiltrationMachineToggle : HandTarget, IHandTarget, IProtoEventListener
     {
         #region Reflection
         private static readonly FieldInfo WorkingField =
             typeof(FiltrationMachine).GetField("working", BindingFlags.Instance | BindingFlags.NonPublic);
 
-        private static readonly MethodInfo GetModelMethod =
-            typeof(FiltrationMachine).GetMethod("GetModel", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static readonly MethodInfo GetModuleMethod =
+        typeof(BaseFiltrationMachineGeometry).GetMethod("GetModule",
+            BindingFlags.Instance | BindingFlags.NonPublic);
         #endregion
 
+        private BaseFiltrationMachineGeometry geo;
         private FiltrationMachine filtrationMachine;
         private PrefabIdentifier identifier;
         private string id;
 
-        private FiltrationMachineSaveData saveData;
+        private bool isOn;
 
         private bool initialized = false;
         private void Update()
@@ -30,19 +33,25 @@ namespace ToggleAppliances.MonoBehaviours
 
         public void Initialize()
         {
-            filtrationMachine = GetComponent<FiltrationMachine>();
+            geo = GetComponentInParent<BaseFiltrationMachineGeometry>();
+            filtrationMachine = (FiltrationMachine)GetModuleMethod.Invoke(geo, new object[] { });
+
+            Logger.Log("Test: " + geo);
+            Logger.Log("T2: " + filtrationMachine);
+
             identifier = GetComponentInParent<PrefabIdentifier>();
             id = identifier.Id;
 
             OnProtoDeserialize(null);
 
-            SetFiltrationMachineToggle(saveData.Working);
+            SetFiltrationMachineToggle(isOn);
 
             initialized = true;
         }
 
         public void OnProtoSerialize(ProtobufSerializer serializer)
         {
+            Logger.Log("Serialize Called for FiltrationMachine");
             var currentState = (bool)WorkingField.GetValue(filtrationMachine);
 
             var savePathDir = Main.GetSavePathDir();
@@ -64,25 +73,24 @@ namespace ToggleAppliances.MonoBehaviours
 
         public void OnProtoDeserialize(ProtobufSerializer serializer)
         {
+            Logger.Log("Deserialize Called for FiltrationMachine");
             var savePathDir = Main.GetSavePathDir();
             var saveFile = Path.Combine(savePathDir, id + ".json");
 
             if (File.Exists(saveFile))
             {
                 var rawJson = File.ReadAllText(saveFile);
-                saveData = JsonConvert.DeserializeObject<FiltrationMachineSaveData>(rawJson);
+                isOn = JsonConvert.DeserializeObject<FiltrationMachineSaveData>(rawJson).Working;
             }
             else
             {
-                saveData = new FiltrationMachineSaveData()
-                {
-                    Working = true
-                };
+                isOn = true;
             }
         }
 
         public void ToggleFiltrationMachine()
         {
+            Logger.Log("ToggleFiltrationMachine called");
             var working = (bool)WorkingField.GetValue(filtrationMachine);
 
             SetFiltrationMachineToggle(!working);
@@ -91,8 +99,7 @@ namespace ToggleAppliances.MonoBehaviours
         //In this case you were using the same reflection twice...
         public void SetFiltrationMachineToggle(bool toggle)
         {
-            var geo = (BaseFiltrationMachineGeometry)GetModelMethod.Invoke(filtrationMachine, new object[] { });
-
+            Logger.Log("SetFiltrationMachineToggle called with " + toggle);
             if (!toggle)
             {
                 filtrationMachine.CancelInvoke("UpdateFiltering");
@@ -107,6 +114,22 @@ namespace ToggleAppliances.MonoBehaviours
             {
                 filtrationMachine.InvokeRepeating("UpdateFiltering", 1f, 1f);
             }
+        }
+
+        public void OnHandHover(GUIHand hand)
+        {
+            if (filtrationMachine.constructed < 1f) return;
+
+            var handReticle = HandReticle.main;
+            handReticle.SetIcon(HandReticle.IconType.Hand);
+            handReticle.SetInteractText("Toggle Filtration Machine");
+        }
+
+        public void OnHandClick(GUIHand hand)
+        {
+            if (filtrationMachine.constructed < 1f) return;
+
+            ToggleFiltrationMachine();
         }
     }
 }

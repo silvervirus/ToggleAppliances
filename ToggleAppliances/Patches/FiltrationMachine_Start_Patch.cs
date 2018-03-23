@@ -1,15 +1,27 @@
 ﻿using ToggleAppliances.MonoBehaviours;
+using System;
+using UnityEngine;
 using Harmony;
 
 namespace ToggleAppliances.Patches
 {
-    [HarmonyPatch(typeof(FiltrationMachine))]
+    [HarmonyPatch(typeof(BaseFiltrationMachineGeometry))]
     [HarmonyPatch("Start")]
     public class FiltrationMachine_Start_Patch
     {
-        static void Postfix(FiltrationMachine __instance)
+        static void Postfix(BaseFiltrationMachineGeometry __instance)
         {
-            __instance.gameObject.AddComponent<FiltrationMachineToggle>();
+            foreach(var t in __instance.GetComponentsInChildren<Transform>())
+            {
+                if(t.name == "Capsule")
+                {
+                    if(t.gameObject.GetComponent<FiltrationMachineToggle>() == null)
+                    {
+                        t.gameObject.AddComponent<FiltrationMachineToggle>();
+                        Logger.Log("Added FiltrationMachineToggle component to FiltrationMachine!");
+                    }
+                }
+            }
         }
     }
 }

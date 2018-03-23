@@ -11,6 +11,7 @@ namespace ToggleAppliances.Patches
         static void Prefix(TechLight __instance)
         {
             __instance.gameObject.AddComponent<FloodlightToggle>();
+            Logger.Log("Added FloodlightToggle Component to TechLight!");
         }
     }
 
@@ -38,7 +39,6 @@ namespace ToggleAppliances.Patches
         {
             var toggle = __instance.GetComponent<FloodlightToggle>();
 
-            ErrorMessage.AddMessage("Test " + toggle.isOn);
             var powerRelay = (PowerRelay)PowerRelayInfo.GetValue(__instance);
             var powerPerSecond = (float)PowerPerSecInfo.GetValue(null);
             var updateInterval = (float)UpdateIntervalInfo.GetValue(null);

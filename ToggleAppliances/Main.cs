@@ -12,7 +12,7 @@ namespace ToggleAppliances
             var harmony = HarmonyInstance.Create("com.ahk1221.toggleappliances");
             harmony.PatchAll(Assembly.GetExecutingAssembly());
 
-            Console.WriteLine("[ToggleAppliances] Successfully patched!");
+            Logger.Log("Successfully patched!");
         }
 
         public static string GetSavePathDir()
