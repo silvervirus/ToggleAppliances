@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ToggleAppliances</RootNamespace>
     <AssemblyName>ToggleAppliances</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,9 +49,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
       <HintPath>D:\SteamLibrary\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.dll</HintPath>
@@ -58,9 +57,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FiltrationMachineSaveData.cs" />
+    <Compile Include="FloodlightSaveData.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="Patches\FiltrationMachine_Save_Patch.cs" />
+    <Compile Include="MonoBehaviours\FiltrationMachineToggle.cs" />
+    <Compile Include="MonoBehaviours\FloodlightToggle.cs" />
+    <Compile Include="Patches\FiltrationMachine_Start_Patch.cs" />
     <Compile Include="Patches\Player_Update_Patch.cs" />
+    <Compile Include="Patches\TechLight_Patches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,5 +1,6 @@
 ﻿using Harmony;
 using System.Reflection;
+using ToggleAppliances.MonoBehaviours;
 using UnityEngine;
 
 namespace ToggleAppliances.Patches
@@ -20,6 +21,7 @@ namespace ToggleAppliances.Patches
                     var geo = go.GetComponentInParent<BaseFiltrationMachineGeometry>();
                     var getModuleMethod = geo.GetType().GetMethod("GetModule", BindingFlags.Instance | BindingFlags.NonPublic);
                     var machine = (FiltrationMachine)getModuleMethod.Invoke(geo, new object[] { });
+                    var toggle = machine.GetComponent<FiltrationMachineToggle>();
 
                     var handReticle = HandReticle.main;
                     handReticle.SetIcon(HandReticle.IconType.Hand);
@@ -27,29 +29,7 @@ namespace ToggleAppliances.Patches
 
                     if (GameInput.GetButtonDown(GameInput.Button.LeftHand))
                     {
-                        var workingField = machine.GetType().GetField("working", BindingFlags.Instance | BindingFlags.NonPublic);
-                        var working = (bool)workingField.GetValue(machine);
-
-                        if(working)
-                        {
-                            machine.CancelInvoke("UpdateFiltering");
-                            machine.workSound.Stop();
-                            machine.vfxController.Stop(1);
-
-                            geo.SetWorking(false, go.transform.position.y);
-
-                            workingField.SetValue(machine, false);
-                        }
-                        else
-                        {
-                            machine.InvokeRepeating("UpdateFiltering", 1f, 1f);
-                            machine.workSound.Play();
-                            machine.vfxController.Play(1);
-
-                            geo.SetWorking(true, go.transform.position.y);
-
-                            workingField.SetValue(machine, true);
-                        }
+                        toggle.ToggleFiltrationMachine();
                     }
                 }
             }

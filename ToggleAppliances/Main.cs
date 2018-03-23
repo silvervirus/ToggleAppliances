@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Reflection;
 using Harmony;
@@ -21,7 +20,8 @@ namespace ToggleAppliances
 
         public static string GetSavePathDir()
         {
-            return Path.Combine(@"./SNAppData/SavedGames/", Utils.GetSavegameDir(), "ToggleAppliances");
+            var savePathDir = Path.Combine(@".\SNAppData\SavedGames\", Utils.GetSavegameDir());
+            return Path.Combine(savePathDir, "ToggleAppliances");
         }
     }
 }
