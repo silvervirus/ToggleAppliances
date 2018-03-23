@@ -9,9 +9,14 @@ namespace ToggleAppliances.Patches
     [HarmonyPatch("Update")]
     public class Player_Update_patch
     {
+        private static readonly MethodInfo GetModuleMethod =
+                typeof(BaseFiltrationMachineGeometry).GetMethod("GetModule",
+                    BindingFlags.Instance | BindingFlags.NonPublic)
+            ;
         static void Prefix()
         {
-            var go = default(GameObject);
+            //this are just my preference (^o^)
+            GameObject go = null;
             var dist = 0f;
 
             if (Targeting.GetTarget(Player.main.gameObject, 1f, out go, out dist))
@@ -19,8 +24,7 @@ namespace ToggleAppliances.Patches
                 if (go.GetComponentInParent<BaseFiltrationMachineGeometry>() != null && go.name != "HandTarget")
                 {
                     var geo = go.GetComponentInParent<BaseFiltrationMachineGeometry>();
-                    var getModuleMethod = geo.GetType().GetMethod("GetModule", BindingFlags.Instance | BindingFlags.NonPublic);
-                    var machine = (FiltrationMachine)getModuleMethod.Invoke(geo, new object[] { });
+                    var machine = (FiltrationMachine)GetModuleMethod.Invoke(geo, new object[] { });
                     var toggle = machine.GetComponent<FiltrationMachineToggle>();
 
                     var handReticle = HandReticle.main;

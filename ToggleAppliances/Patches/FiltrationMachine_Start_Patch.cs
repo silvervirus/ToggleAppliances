@@ -9,7 +9,7 @@ namespace ToggleAppliances.Patches
     {
         static void Postfix(FiltrationMachine __instance)
         {
-            var mB = __instance.gameObject.AddComponent<FiltrationMachineToggle>();
+            __instance.gameObject.AddComponent<FiltrationMachineToggle>();
         }
     }
 }

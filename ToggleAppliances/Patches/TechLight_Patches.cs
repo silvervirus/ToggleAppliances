@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using Harmony;
 using System.Reflection;
 using ToggleAppliances.MonoBehaviours;
-using Harmony;
 
 namespace ToggleAppliances.Patches
 {
@@ -15,7 +10,7 @@ namespace ToggleAppliances.Patches
     {
         static void Prefix(TechLight __instance)
         {
-            var mB = __instance.gameObject.AddComponent<FloodlightToggle>();
+            __instance.gameObject.AddComponent<FloodlightToggle>();
         }
     }
 
@@ -23,43 +18,53 @@ namespace ToggleAppliances.Patches
     [HarmonyPatch("UpdatePower")]
     public class TechLight_UpdatePower_Patche
     {
+        //this way the reflection would be done only once, insted of getting this vars every function call.
+        private static readonly FieldInfo PowerRelayInfo =
+            typeof(TechLight).GetField("powerRelay", BindingFlags.Instance | BindingFlags.NonPublic);
+
+        private static readonly MethodInfo SetLightsActiveMethod =
+            typeof(TechLight).GetMethod("SetLightsActive", BindingFlags.Instance | BindingFlags.NonPublic);
+
+        private static readonly FieldInfo PowerPerSecInfo =
+            typeof(TechLight).GetField("powerPerSecond", BindingFlags.Static | BindingFlags.NonPublic);
+
+        private static readonly FieldInfo UpdateIntervalInfo =
+            typeof(TechLight).GetField("updateInterval", BindingFlags.Static | BindingFlags.NonPublic);
+
+        private static readonly FieldInfo SearchingField =
+            typeof(TechLight).GetField("searching", BindingFlags.Instance | BindingFlags.NonPublic);
+
         static bool Prefix(TechLight __instance)
         {
             var toggle = __instance.GetComponent<FloodlightToggle>();
 
             ErrorMessage.AddMessage("Test " + toggle.isOn);
-            var powerRelay = (PowerRelay)typeof(TechLight).GetField("powerRelay", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(__instance);
-            var setLightsActiveMethod = typeof(TechLight).GetMethod("SetLightsActive", BindingFlags.Instance | BindingFlags.NonPublic);
-            var powerPerSecond = (float)typeof(TechLight).GetField("powerPerSecond", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
-            var updateInterval = (float)typeof(TechLight).GetField("updateInterval", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
+            var powerRelay = (PowerRelay)PowerRelayInfo.GetValue(__instance);
+            var powerPerSecond = (float)PowerPerSecInfo.GetValue(null);
+            var updateInterval = (float)UpdateIntervalInfo.GetValue(null);
 
-            var searchingField = typeof(TechLight).GetField("searching", BindingFlags.Instance | BindingFlags.NonPublic);
-            var searching = (bool)searchingField.GetValue(__instance);
+            var searching = (bool)SearchingField.GetValue(__instance);
 
-            if (__instance.placedByPlayer && __instance.constructable.constructed)
+            if (!__instance.placedByPlayer || !__instance.constructable.constructed) return false;
+            if (powerRelay)
             {
-                if (powerRelay)
+                if (powerRelay.GetPowerStatus() == PowerSystem.Status.Normal && toggle.isOn)
                 {
-                    if (powerRelay.GetPowerStatus() == PowerSystem.Status.Normal && toggle.isOn)
-                    {
-                        setLightsActiveMethod.Invoke(__instance, new object[] { true });
-                        float num;
-                        powerRelay.ConsumeEnergy(powerPerSecond * updateInterval, out num);
-                    }
-                    else
-                    {
-                        setLightsActiveMethod.Invoke(__instance, new object[] { false });
-                    }
+                    SetLightsActiveMethod.Invoke(__instance, new object[] { true });
+                    float num;
+                    powerRelay.ConsumeEnergy(powerPerSecond * updateInterval, out num);
                 }
                 else
                 {
-                    setLightsActiveMethod.Invoke(__instance, new object[] { false });
-                    if (!searching)
-                    {
-                        searchingField.SetValue(__instance, true);
-                        __instance.InvokeRepeating("FindNearestValidRelay", 0f, 2f);
-                    }
+                    SetLightsActiveMethod.Invoke(__instance, new object[] { false });
                 }
+            }
+            else
+            {
+                SetLightsActiveMethod.Invoke(__instance, new object[] { false });
+                if (searching) return false;
+                SearchingField.SetValue(__instance, true);
+                __instance.InvokeRepeating("FindNearestValidRelay", 0f, 2f);
             }
 
             return false;
