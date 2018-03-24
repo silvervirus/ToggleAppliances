@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Reflection;
 
-namespace ToggleAppliances
+namespace ToggleMachines
 {
     public class Main
     {

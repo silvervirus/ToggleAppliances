@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using UnityEngine;
 
-namespace ToggleAppliances.MonoBehaviours
+namespace ToggleMachines.MonoBehaviours
 {
     public class FiltrationMachineHandTarget : HandTarget, IHandTarget
     {

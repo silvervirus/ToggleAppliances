@@ -1,10 +1,10 @@
-﻿using ToggleAppliances.MonoBehaviours;
+﻿using ToggleMachines.MonoBehaviours;
 using System;
 using UnityEngine;
 using Harmony;
 using System.Reflection;
 
-namespace ToggleAppliances.Patches
+namespace ToggleMachines.Patches
 {
     [HarmonyPatch(typeof(BaseFiltrationMachineGeometry))]
     [HarmonyPatch("Start")]

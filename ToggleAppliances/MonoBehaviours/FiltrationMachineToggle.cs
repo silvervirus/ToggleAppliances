@@ -4,7 +4,7 @@ using System.Reflection;
 using UnityEngine;
 using System;
 
-namespace ToggleAppliances.MonoBehaviours
+namespace ToggleMachines.MonoBehaviours
 {
     public class FiltrationMachineToggle : MonoBehaviour, IProtoEventListener
     {

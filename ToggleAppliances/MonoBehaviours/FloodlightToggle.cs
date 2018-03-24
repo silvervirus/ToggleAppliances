@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace ToggleAppliances.MonoBehaviours
+namespace ToggleMachines.MonoBehaviours
 {
     public class FloodlightToggle : HandTarget, IHandTarget, IProtoEventListener
     {

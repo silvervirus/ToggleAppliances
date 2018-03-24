@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ToggleAppliances.MonoBehaviours;
+using ToggleMachines.MonoBehaviours;
 using Harmony;
 
-namespace ToggleAppliances.Patches
+namespace ToggleMachines.Patches
 {
     [HarmonyPatch(typeof(BaseSpotLight))]
     [HarmonyPatch("Start")]

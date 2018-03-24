@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace ToggleAppliances
+namespace ToggleMachines
 {
     internal class Logger
     {
         internal static void Log(string message)
         {
-            Console.WriteLine("[ToggleAppliances] " + message);
+            Console.WriteLine("[ToggleMachines] " + message);
         }
     }
 }

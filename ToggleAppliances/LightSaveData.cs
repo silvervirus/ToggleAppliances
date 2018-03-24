@@ -1,4 +1,4 @@
-﻿namespace ToggleAppliances
+﻿namespace ToggleMachines
 {
     public class LightSaveData
     {

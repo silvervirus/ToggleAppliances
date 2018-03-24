@@ -2,7 +2,7 @@
 using System.Reflection;
 using Oculus.Newtonsoft.Json;
 
-namespace ToggleAppliances.MonoBehaviours
+namespace ToggleMachines.MonoBehaviours
 {
     public class SpotlightToggle : HandTarget, IHandTarget, IProtoEventListener
     {
@@ -38,6 +38,7 @@ namespace ToggleAppliances.MonoBehaviours
             if (!spotLight.constructed) return;
 
             IsOn = !IsOn;
+            PoweredProperty.SetValue(spotLight, IsOn, null);
         }
 
         public void OnHandHover(GUIHand hand)

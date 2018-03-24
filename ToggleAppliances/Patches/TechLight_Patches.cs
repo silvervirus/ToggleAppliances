@@ -1,8 +1,8 @@
 ﻿using Harmony;
 using System.Reflection;
-using ToggleAppliances.MonoBehaviours;
+using ToggleMachines.MonoBehaviours;
 
-namespace ToggleAppliances.Patches
+namespace ToggleMachines.Patches
 {
     [HarmonyPatch(typeof(TechLight))]
     [HarmonyPatch("Start")]
