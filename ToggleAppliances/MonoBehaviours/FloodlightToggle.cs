@@ -58,13 +58,13 @@ namespace ToggleAppliances.MonoBehaviours
         {
             Logger.Log("Deserialize Called for FloodlightToggle");
 
-            var savePathDir = Main.GetSavePathDir();
+            var savePathDir = Path.Combine(Main.GetSavePathDir(), "Floodlights");
             var savePath = Path.Combine(savePathDir, id + ".json");
 
             if(File.Exists(savePath))
             {
                 var rawJson = File.ReadAllText(savePath);
-                var saveData = JsonConvert.DeserializeObject<FloodlightSaveData>(rawJson);
+                var saveData = JsonConvert.DeserializeObject<LightSaveData>(rawJson);
 
                 isOn = saveData.IsOn;
             }
@@ -78,13 +78,13 @@ namespace ToggleAppliances.MonoBehaviours
         {
             Logger.Log("Serialize Called for FloodlightToggle");
 
-            var savePathDir = Main.GetSavePathDir();
+            var savePathDir = Path.Combine(Main.GetSavePathDir(), "Floodlights");
             var savePath = Path.Combine(savePathDir, id + ".json");
 
             if (!Directory.Exists(savePathDir))
                 Directory.CreateDirectory(savePathDir);
 
-            var saveData = new FloodlightSaveData()
+            var saveData = new LightSaveData()
             {
                 IsOn = isOn
             };

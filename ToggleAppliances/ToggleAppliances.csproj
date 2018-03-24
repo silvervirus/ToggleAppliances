@@ -57,11 +57,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FiltrationMachineSaveData.cs" />
-    <Compile Include="FloodlightSaveData.cs" />
+    <Compile Include="LightSaveData.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="MonoBehaviours\FiltrationMachineHandTarget.cs" />
     <Compile Include="MonoBehaviours\FiltrationMachineToggle.cs" />
     <Compile Include="MonoBehaviours\FloodlightToggle.cs" />
+    <Compile Include="MonoBehaviours\SpotlightToggle.cs" />
+    <Compile Include="Patches\BaseSpotLight_Patches.cs" />
     <Compile Include="Patches\FiltrationMachine_Start_Patch.cs" />
     <Compile Include="Patches\TechLight_Patches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

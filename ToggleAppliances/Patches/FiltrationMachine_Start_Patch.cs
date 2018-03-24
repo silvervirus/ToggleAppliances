@@ -2,12 +2,13 @@
 using System;
 using UnityEngine;
 using Harmony;
+using System.Reflection;
 
 namespace ToggleAppliances.Patches
 {
     [HarmonyPatch(typeof(BaseFiltrationMachineGeometry))]
     [HarmonyPatch("Start")]
-    public class FiltrationMachine_Start_Patch
+    public class BaseFiltrationMachineGeometry_Start_Patch
     {
         static void Postfix(BaseFiltrationMachineGeometry __instance)
         {
@@ -15,12 +16,26 @@ namespace ToggleAppliances.Patches
             {
                 if(t.name == "Capsule")
                 {
-                    if(t.gameObject.GetComponent<FiltrationMachineToggle>() == null)
+                    if(t.gameObject.GetComponent<FiltrationMachineHandTarget>() == null)
                     {
-                        t.gameObject.AddComponent<FiltrationMachineToggle>();
-                        Logger.Log("Added FiltrationMachineToggle component to FiltrationMachine!");
+                        t.gameObject.AddComponent<FiltrationMachineHandTarget>();
+                        Logger.Log("Added FiltrationMachineHandTarget component to FiltrationMachine!");
                     }
                 }
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(FiltrationMachine))]
+    [HarmonyPatch("Start")]
+    public class FiltrationMachine_Start_Patch
+    {
+        static void Prefix(FiltrationMachine __instance)
+        {
+            if(__instance.gameObject.GetComponent<FiltrationMachineToggle>() == null)
+            {
+                __instance.gameObject.AddComponent<FiltrationMachineToggle>();
+                Logger.Log("Added FiltrationMachineToggle component to FiltrationMachine!");
             }
         }
     }

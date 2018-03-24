@@ -6,15 +6,15 @@ using System;
 
 namespace ToggleAppliances.MonoBehaviours
 {
-    public class FiltrationMachineToggle : HandTarget, IHandTarget, IProtoEventListener
+    public class FiltrationMachineToggle : MonoBehaviour, IProtoEventListener
     {
         #region Reflection
         private static readonly FieldInfo WorkingField =
             typeof(FiltrationMachine).GetField("working", BindingFlags.Instance | BindingFlags.NonPublic);
 
-        private static readonly MethodInfo GetModuleMethod =
-        typeof(BaseFiltrationMachineGeometry).GetMethod("GetModule",
-            BindingFlags.Instance | BindingFlags.NonPublic);
+        private static readonly MethodInfo GetModelMethod =
+            typeof(FiltrationMachine).GetMethod("GetModel",
+                BindingFlags.Instance | BindingFlags.NonPublic);
         #endregion
 
         private BaseFiltrationMachineGeometry geo;
@@ -33,28 +33,25 @@ namespace ToggleAppliances.MonoBehaviours
 
         public void Initialize()
         {
-            geo = GetComponentInParent<BaseFiltrationMachineGeometry>();
-            filtrationMachine = (FiltrationMachine)GetModuleMethod.Invoke(geo, new object[] { });
-
-            Logger.Log("Test: " + geo);
-            Logger.Log("T2: " + filtrationMachine);
+            filtrationMachine = GetComponent<FiltrationMachine>();
+            geo = (BaseFiltrationMachineGeometry)GetModelMethod.Invoke(filtrationMachine, new object[] { });
 
             identifier = GetComponentInParent<PrefabIdentifier>();
             id = identifier.Id;
 
-            OnProtoDeserialize(null);
+            OnLoad();
 
             SetFiltrationMachineToggle(isOn);
 
             initialized = true;
         }
 
-        public void OnProtoSerialize(ProtobufSerializer serializer)
+        public void OnSave()
         {
             Logger.Log("Serialize Called for FiltrationMachine");
             var currentState = (bool)WorkingField.GetValue(filtrationMachine);
 
-            var savePathDir = Main.GetSavePathDir();
+            var savePathDir = Path.Combine(Main.GetSavePathDir(), "FiltrationMachines");
             var saveFile = Path.Combine(savePathDir, id + ".json");
 
             if (!Directory.Exists(savePathDir))
@@ -71,10 +68,10 @@ namespace ToggleAppliances.MonoBehaviours
             File.WriteAllText(saveFile, json);
         }
 
-        public void OnProtoDeserialize(ProtobufSerializer serializer)
+        public void OnLoad()
         {
             Logger.Log("Deserialize Called for FiltrationMachine");
-            var savePathDir = Main.GetSavePathDir();
+            var savePathDir = Path.Combine(Main.GetSavePathDir(), "FiltrationMachines");
             var saveFile = Path.Combine(savePathDir, id + ".json");
 
             if (File.Exists(saveFile))
@@ -116,20 +113,14 @@ namespace ToggleAppliances.MonoBehaviours
             }
         }
 
-        public void OnHandHover(GUIHand hand)
+        public void OnProtoSerialize(ProtobufSerializer serializer)
         {
-            if (filtrationMachine.constructed < 1f) return;
-
-            var handReticle = HandReticle.main;
-            handReticle.SetIcon(HandReticle.IconType.Hand);
-            handReticle.SetInteractText("Toggle Filtration Machine");
+            OnSave();
         }
 
-        public void OnHandClick(GUIHand hand)
+        public void OnProtoDeserialize(ProtobufSerializer serializer)
         {
-            if (filtrationMachine.constructed < 1f) return;
-
-            ToggleFiltrationMachine();
+            OnLoad();
         }
     }
 }

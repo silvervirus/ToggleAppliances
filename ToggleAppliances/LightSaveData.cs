@@ -1,6 +1,6 @@
 ﻿namespace ToggleAppliances
 {
-    public class FloodlightSaveData
+    public class LightSaveData
     {
         public bool IsOn;
     }
