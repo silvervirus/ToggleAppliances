@@ -6,8 +6,8 @@ namespace ToggleAppliances.MonoBehaviours
 {
     public class SpotlightToggle : HandTarget, IHandTarget, IProtoEventListener
     {
-        private static readonly MethodInfo UpdatePowerMethod = 
-            typeof(BaseSpotLight)
+        private static readonly PropertyInfo PoweredProperty =
+            typeof(BaseSpotLight).GetProperty("powered", BindingFlags.Instance | BindingFlags.NonPublic);
 
         public bool IsOn;
 
