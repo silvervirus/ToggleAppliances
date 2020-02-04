@@ -21,8 +21,8 @@ namespace ToggleMachines
 
         public static string GetSavePathDir()
         {
-            var savePathDir = Path.Combine(@".\SNAppData\SavedGames\", SaveLoadManager.GetTemporarySavePath());
-            return Path.Combine(savePathDir, "ToggleAppliances");
+             var savePathDir = Path.Combine(SaveLoadManager.GetTemporarySavePath(), "ToggleAppliances");
+            return Path.Combine(savePathDir, "ToggleAppliances")
         }
     }
 }
