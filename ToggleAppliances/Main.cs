@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using UnityEngine;
 using QModManager.API.ModLoading;
-using SMLHelper.V2.Utility;
+
 namespace ToggleMachines
 {
     [QModCore]
@@ -21,7 +21,7 @@ namespace ToggleMachines
 
         public static string GetSavePathDir()
         {
-            var savePathDir = Path.Combine(@".\SNAppData\SavedGames\", SaveUtils.GetCurrentSaveDataDir());
+            var savePathDir = Path.Combine(@".\SNAppData\SavedGames\", SaveLoadManager.GetTemporarySavePath());
             return Path.Combine(savePathDir, "ToggleAppliances");
         }
     }
