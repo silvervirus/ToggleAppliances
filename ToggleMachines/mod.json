@@ -4,8 +4,5 @@
   "Author": "AHK1221",
   "Version": "1.0.4",
   "Enable": true,
-  "AssemblyName": "ToggleMachines.dll",
-  "EntryMethod": "ToggleMachines.Qpatch.Patch",
-  "Config": {
-  }
+  "AssemblyName": "ToggleMachines.dll"
 }
