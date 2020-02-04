@@ -51,7 +51,7 @@ namespace ToggleMachines.MonoBehaviours
             Logger.Log("Serialize Called for FiltrationMachine");
             var currentState = (bool)WorkingField.GetValue(filtrationMachine);
 
-            var savePathDir = Path.Combine(Main.GetSavePathDir(), "FiltrationMachines");
+            var savePathDir = Path.Combine(Qpatch.GetSavePathDir(), "FiltrationMachines");
             var saveFile = Path.Combine(savePathDir, id + ".json");
 
             if (!Directory.Exists(savePathDir))
@@ -71,7 +71,7 @@ namespace ToggleMachines.MonoBehaviours
         public void OnLoad()
         {
             Logger.Log("Deserialize Called for FiltrationMachine");
-            var savePathDir = Path.Combine(Main.GetSavePathDir(), "FiltrationMachines");
+            var savePathDir = Path.Combine(Qpatch.GetSavePathDir(), "FiltrationMachines");
             var saveFile = Path.Combine(savePathDir, id + ".json");
 
             if (File.Exists(saveFile))

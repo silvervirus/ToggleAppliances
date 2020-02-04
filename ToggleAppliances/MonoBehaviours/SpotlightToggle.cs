@@ -52,7 +52,7 @@ namespace ToggleMachines.MonoBehaviours
 
         public void OnProtoDeserialize(ProtobufSerializer serializer)
         {
-            var savePathDir = Path.Combine(Main.GetSavePathDir(), "Spotlights");
+            var savePathDir = Path.Combine(Qpatch.GetSavePathDir(), "Spotlights");
             var saveFile = Path.Combine(savePathDir, id + ".json");
 
             if (File.Exists(saveFile))
@@ -68,7 +68,7 @@ namespace ToggleMachines.MonoBehaviours
 
         public void OnProtoSerialize(ProtobufSerializer serializer)
         {
-            var savePathDir = Path.Combine(Main.GetSavePathDir(), "Spotlights");
+            var savePathDir = Path.Combine(Qpatch.GetSavePathDir(), "Spotlights");
             var saveFile = Path.Combine(savePathDir, id + ".json");
 
             if (!Directory.Exists(savePathDir))

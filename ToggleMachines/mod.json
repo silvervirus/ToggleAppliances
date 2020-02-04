@@ -1,0 +1,11 @@
+{
+  "Id": "ToggleMachines",
+  "DisplayName": "Toggle Machines",
+  "Author": "AHK1221",
+  "Version": "1.0.2",
+  "Enable": true,
+  "AssemblyName": "ToggleMachines.dll",
+  "EntryMethod": "ToggleMachines.Qpatch.Patch",
+  "Config": {
+  }
+}

@@ -58,7 +58,7 @@ namespace ToggleMachines.MonoBehaviours
         {
             Logger.Log("Deserialize Called for FloodlightToggle");
 
-            var savePathDir = Path.Combine(Main.GetSavePathDir(), "Floodlights");
+            var savePathDir = Path.Combine(Qpatch.GetSavePathDir(), "Floodlights");
             var savePath = Path.Combine(savePathDir, id + ".json");
 
             if(File.Exists(savePath))
@@ -78,7 +78,7 @@ namespace ToggleMachines.MonoBehaviours
         {
             Logger.Log("Serialize Called for FloodlightToggle");
 
-            var savePathDir = Path.Combine(Main.GetSavePathDir(), "Floodlights");
+            var savePathDir = Path.Combine(Qpatch.GetSavePathDir(), "Floodlights");
             var savePath = Path.Combine(savePathDir, id + ".json");
 
             if (!Directory.Exists(savePathDir))
